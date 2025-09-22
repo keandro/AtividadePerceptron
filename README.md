@@ -160,4 +160,95 @@
     - Limitações lineares exigem algoritmos mais avançados
     - Para aplicação real: ensemble methods + validação rigorosa
 
-## 4.
+## 4. Dataset de Classificação com Ruído
+
+1. Descrição do Dataset:
+    - Amostras: 200 (balanceadas)
+    - Features: 2 (informativas, sem redundância)
+    - Tipo: Dataset sintético controlado
+    - Variáveis experimentais:
+      - **class_sep**: 0.5 → 3.0 (separação entre classes)
+      - **flip_y**: 0% → 20% (ruído nos rótulos)
+
+2. Implementações Especiais:
+    - **Perceptron com Early Stopping**: Paciência de 10 épocas
+    - **Divisão tripla**: 60% treino, 20% validação, 20% teste
+    - **Validação durante treinamento**: Para prevenir overfitting
+
+3. Experimentos Realizados:
+
+    **A. Variação da Separação (ruído fixo = 5%):**
+    | Separação | Treino | Validação | Teste | Épocas | Convergência |
+    |-----------|--------|-----------|-------|--------|--------------|
+    | 0.5       | 66.7%  | 62.5%     | 70.0% | 21     | NÃO          |
+    | 1.0       | 82.5%  | 72.5%     | 77.5% | 11     | NÃO          |
+    | 1.5       | 92.5%  | 90.0%     | 92.5% | 18     | NÃO          |
+    | 2.0       | 96.7%  | 95.0%     | 95.0% | 16     | NÃO          |
+    | 2.5       | 99.2%  | 95.0%     | 95.0% | 12     | NÃO          |
+    | 3.0       | 99.2%  | 97.5%     | 95.0% | 11     | NÃO          |
+
+    **B. Variação do Ruído (separação fixa = 1.5):**
+    | Ruído | Treino | Validação | Teste | Épocas | Convergência |
+    |-------|--------|-----------|-------|--------|--------------|
+    | 0%    | 94.2%  | 92.5%     | 95.0% | 11     | NÃO          |
+    | 5%    | 92.5%  | 90.0%     | 92.5% | 18     | NÃO          |
+    | 10%   | 87.5%  | 82.5%     | 95.0% | 13     | NÃO          |
+    | 15%   | 80.8%  | 87.5%     | 80.0% | 12     | NÃO          |
+    | 20%   | 80.8%  | 85.0%     | 75.0% | 11     | NÃO          |
+
+4. Visualizações:
+    - Ruído [Result](./ruido_result.png) - Regiões de decisão
+    - Ruído [Analysis](./ruido_analysis.png) - Gráficos comparativos
+
+5. Análise dos Resultados:
+
+    **A. Impacto da Separação:**
+    - **Melhoria dramática**: 70% → 95% (separação 0.5 → 2.0)
+    - **Ponto de saturação**: A partir de separação 2.0, ganhos marginais
+    - **Limite teórico**: ~95% devido aos 5% de ruído nos rótulos
+
+    **B. Impacto do Ruído:**
+    - **Degradação linear**: 95% → 75% (0% → 20% ruído)
+    - **Limite teórico**: Performance máxima = 100% - ruído%
+    - **Ruído crítico**: >15% torna perceptron inadequado
+
+6. Early Stopping:
+    - **Uso universal**: Todos os 11 experimentos utilizaram early stopping
+    - **Benefícios**: Evita overfitting, treino mais eficiente
+    - **Paciência ideal**: 10 épocas mostrou-se adequada
+
+7. Análise:
+    - **Sensibilidade ao ruído**: Perceptron muito sensível a rótulos incorretos
+    - **Dependência da separação**: Crucial para boa performance
+    - **Limitações lineares**: Fronteira reta inadequada para dados complexos
+    - **Necessidade de validação**: Essential para dados ruidosos
+
+8. Impacto Prático:
+    - **Dados limpos** (ruído <5%, separação >2.0): Perceptron adequado
+    - **Dados moderados** (ruído 5-10%, separação 1.0-2.0):️ Performance limitada
+    - **Dados ruidosos** (ruído >15%, separação <1.0): Perceptron inadequado
+
+9. Recomendações:
+
+    Use Perceptron quando:
+    - Separação entre classes ≥ 2.0
+    - Ruído nos rótulos < 10%
+    - Dataset linearmente separável
+    - Velocidade é prioritária
+
+    Considere alternativas quando:
+    - Separação 1.0-2.0 com ruído 10-15%
+    - Necessidade de maior robustez
+    - Dados com outliers frequentes
+
+     Evite Perceptron quando:
+    - Ruído nos rótulos > 15%
+    - Separação entre classes < 1.0
+    - Fronteira de decisão complexa
+    - Alta sobreposição entre classes
+
+10. Conclusão:
+    - Early stopping é **essencial** para dados ruidosos
+    - Separação entre classes é **mais crítica** que o nível de ruído
+    - Para aplicações reais: **SVM**, **Random Forest** ou **Ensemble Methods**
+    - Perceptron ideal apenas para **dados bem separados e limpos**

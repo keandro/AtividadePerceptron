@@ -263,14 +263,3 @@ elif fn <= 2:
     print(f"   ⚠️ Poucos casos malignos perdidos - ACEITÁVEL")
 else:
     print(f"   ❌ Muitos casos malignos perdidos - PERIGOSO!")
-
-print(f"\n4. RECOMENDAÇÕES:")
-print(f"   - Use TODAS as features disponíveis")
-print(f"   - Considere algoritmos mais robustos (SVM, Random Forest)")
-print(f"   - Sempre avalie falsos negativos em problemas médicos")
-print(f"   - Implemente validação cruzada para maior confiabilidade")
-
-print(f"\n5. LIMITAÇÕES DO PERCEPTRON:")
-print(f"   - Assume separabilidade linear")
-print(f"   - Pode não capturar relações complexas entre features")
-print(f"   - Para diagnóstico médico, considere métodos ensemble")
