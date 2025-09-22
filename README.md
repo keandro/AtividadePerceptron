@@ -90,3 +90,74 @@
     - K-Nearest Neighbors (KNN)
     - Decision Trees
     - Naive Bayes com kernels
+
+## 3. Breast Cancer Wisconsin
+
+1. Descrição do Dataset:
+    - Número de amostras: 569 (212 Maligno + 357 Benigno)
+    - Número de features: 30 (características morfológicas dos núcleos celulares)
+    - Classes: ['malignant' 'benign'] (maligno e benigno)
+    - Distribuição das classes: desbalanceada (37% maligno, 63% benigno)
+    - Tipo: Dataset médico real para diagnóstico de câncer de mama
+
+2. Versões Implementadas:
+    - **Versão A (2 features)**: mean radius + mean texture (para visualização)
+    - **Versão B (30 features)**: todas as características disponíveis
+
+3. Resultados Obtidos:
+
+    | Versão | Features | Acurácia Treino | Acurácia Teste | Convergência |
+    |--------|----------|-----------------|----------------|--------------|
+    | A      | 2        | 87.19%          | 87.72%         | NÃO          |
+    | B      | 30       | 98.99%          | 96.49%         | NÃO          |
+
+4. Visualização:
+    Breast Cancer [Result](./breast_cancer_result.png)
+
+5. Análise Médica Crítica:
+
+    **Matriz de Confusão (Versão B - 30 features):**
+    ```
+                    Predito
+               Maligno  Benigno
+    Real Maligno    59        5  ← Falsos Negativos (CRÍTICO!)
+         Benigno     1      106  ← Falsos Positivos
+    ```
+
+    **Métricas Médicas:**
+    - Sensibilidade (detectar malignos): 92.19%
+    - Especificidade (detectar benignos): 99.07%
+    - Taxa de Falsos Negativos: 7.81%
+    - Taxa de Falsos Positivos: 0.93%
+
+6. Comparação de Performance:
+    - **Melhoria com 30 features**: +8.77% de acurácia
+    - **Precision Maligno**: 98% vs 79% (Versão B vs A)
+    - **F1-Score geral**: 0.96 vs 0.87
+    - **Impacto dos Falsos Negativos**: 5 → 1 caso perdido
+
+7. Análise:
+    - **Adequação médica**: Acurácia excelente (96.49%)
+    - **Problema crítico**: 1 caso maligno classificado como benigno
+    - **Importância das features**: Mais features = diagnóstico muito melhor
+    - **Limitação do Perceptron**: Não conseguiu convergir nem com 30 features
+
+8. Impacto Médico:
+    - **Falsos Negativos**: Pacientes com câncer seriam dispensados (FATAL)
+    - **Falsos Positivos**: Pacientes saudáveis fariam exames desnecessários
+    - **Prioridade**: Minimizar falsos negativos a qualquer custo
+
+9. Recomendações:
+    - Usar TODAS as features disponíveis (30 > 2)
+    - Considerar algoritmos mais robustos (SVM, Random Forest, Deep Learning)
+    - Implementar validação cruzada para maior confiabilidade
+    - Otimizar para sensibilidade (detectar todos os casos malignos)
+    - Sempre ter segunda opinião médica
+
+10. Conclusão:
+    - O perceptron mostrou potencial para diagnóstico médico
+    - 30 features são cruciais para boa performance
+    - Limitações lineares exigem algoritmos mais avançados
+    - Para aplicação real: ensemble methods + validação rigorosa
+
+## 4.
