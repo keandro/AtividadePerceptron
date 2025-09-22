@@ -252,3 +252,113 @@
     - Separação entre classes é **mais crítica** que o nível de ruído
     - Para aplicações reais: **SVM**, **Random Forest** ou **Ensemble Methods**
     - Perceptron ideal apenas para **dados bem separados e limpos**
+
+## 5. Dataset Linearmente Separável Personalizado
+
+1. Descrição do Dataset:
+    - Amostras: 100 por experimento (50 por classe)
+    - Features: 2 (coordenadas x, y)
+    - Tipo: Dataset sintético com centros controlados
+    - Distribuição: Gaussiana ao redor dos centros
+    - Objetivo: Analisar geometria da fronteira de decisão
+
+2. Experimentos com Diferentes Separações:
+
+    | Experimento | Centro 0 | Centro 1 | Distância | Treino | Teste | Convergência | Épocas |
+    |-------------|----------|----------|-----------|--------|-------|--------------|--------|
+    | Bem Separado| (-2,-2)  | (2,2)    | 5.66      | 100%   | 100%  | SIM          | 2      |
+    | Reduzida    | (-1,-1)  | (1,1)    | 2.83      | 84.3%  | 83.3% | NÃO          | 100    |
+    | Mínima      | (-0.5,-0.5)| (0.5,0.5)| 1.41    | 74.3%  | 70.0% | NÃO          | 100    |
+    | Limite      | (-0.2,-0.2)| (0.2,0.2)| 0.57    | 67.1%  | 60.0% | NÃO          | 100    |
+    | Diagonal    | (-2,2)   | (2,-2)   | 5.66      | 100%   | 100%  | SIM          | 2      |
+
+3. Visualização:
+    Dataset Personalizado [Result](./linearmente_separavel_result.png)
+
+4. Análise Geométrica das Fronteiras:
+
+    **A. Experimento Bem Separado:**
+    - Equação: x₂ = -1.258 * x₁ + 0.000
+    - Ângulo: -51.5° (inclinação negativa)
+    - Classificação: 100/100 pontos corretos
+
+    **B. Experimento Diagonal:**
+    - Equação: x₂ = 0.858 * x₁ + 0.000  
+    - Ângulo: +40.6° (inclinação positiva)
+    - Classificação: 100/100 pontos corretos
+
+    **C. Experimentos com Falha:**
+    - Separação < 1.0: Fronteira inadequada
+    - Muitos pontos do lado errado da linha
+    - Oscilação sem convergência
+
+5. Teste do Limite de Separabilidade:
+
+    | Distância | Acurácia | Convergência | Status |
+    |-----------|----------|--------------|--------|
+    | 2.0       | 100.0%   | SIM          |  Excelente |
+    | 1.5       | 100.0%   | SIM          |  Excelente |
+    | **1.0**   | **88.3%**| **NÃO**      | ️ **Limite crítico** |
+    | 0.8       | 83.3%    | NÃO          |  Falha |
+    | 0.6       | 50.0%    | NÃO          |  Falha grave |
+    | ≤0.4      | ~60%     | NÃO          |  Aleatório |
+
+    **Ponto de Falha Identificado: Distância ≈ 1.0**
+
+6. Descobertas Geométricas:
+
+    **A. Geometria da Solução:**
+    - Perceptron sempre encontra uma **linha reta**
+    - Equação: w₁×x₁ + w₂×x₂ + bias = 0
+    - Fronteira adapta-se à orientação dos dados
+    - Todos os pontos ficam do lado correto quando converge
+
+    **B. Impacto da Orientação:**
+    - **Qualquer orientação funciona** (horizontal, vertical, diagonal)
+    - A fronteira **se adapta automaticamente**
+    - **Separação importa mais que orientação**
+
+    **C. Fatores Críticos:**
+    - **Distância > 2.0**: Convergência rápida (2 épocas)
+    - **Distância 1.0-2.0**: Risco de não convergência
+    - **Distância < 1.0**: Falha consistente
+
+7. Análise:
+    - **Geometria simples**: Linha reta resolve tudo quando possível
+    - **Muito sensível**: Pequenas mudanças na separação = grandes impactos
+    - **Orientação flexível**: Funciona em qualquer direção
+    - **Limite claro**: Existe um ponto de falha bem definido
+
+8. Insights Práticos:
+
+    Use Perceptron quando:
+    - Centros das classes distantes (≥ 2.0)
+    - Dados bem agrupados em torno dos centros
+    - Fronteira linear é adequada
+    - Convergência rápida é importante
+
+    Cuidado quando:
+    - Distância entre centros 1.0-2.0
+    - Há sobreposição entre classes
+    - Ruído significativo nos dados
+
+    Evite quando:
+    - Centros muito próximos (< 1.0)
+    - Alta sobreposição entre classes
+    - Fronteira não-linear necessária
+
+9. Equações das Fronteiras Aprendidas:
+    ```
+    Bem Separado:  x₂ = -1.26×x₁ + 0.00
+    Diagonal:      x₂ = +0.86×x₁ + 0.00
+    Reduzida:      x₂ = -2.94×x₁ + 1.79
+    Mínima:        x₂ = -0.99×x₁ + 0.64
+    Limite:        x₂ = -2.13×x₁ + 0.79
+    ```
+
+10. Conclusão:
+    - A **geometria do perceptron** é elegante: uma linha reta
+    - **Distância crítica** existe (~1.0) abaixo da qual falha
+    - **Orientação é irrelevante** - separação é tudo
+    - Ferramenta poderosa para **problemas lineares bem definidos**
+    - Base perfeita para entender **limitações e potencial** do algoritmo
